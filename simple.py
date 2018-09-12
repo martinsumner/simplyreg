@@ -2,6 +2,7 @@ import tornado.ioloop
 import tornado.web
 import plates
 import os
+import sys
 import re
 
 LIST_PARAM = re.compile(r"^[A-Z]+$")
@@ -69,5 +70,5 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(8080)
+    app.listen(sys.argv[1])
     tornado.ioloop.IOLoop.current().start()
