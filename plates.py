@@ -30,14 +30,11 @@ class Plates():
             refinedMatch = matchString
 
         beginRe = re.compile(r".*\b" + refinedMatch)
-        matchRe = re.compile(r".*" + refinedMatch)
-        beginResults, matchResults = [], []
+        beginResults = []
         for plateT in self.plates:
             if beginRe.match(plateT[1]):
                 beginResults.append(plateT)
-            elif matchRe.match(plateT[0]):
-                matchResults.append(plateT)
-        return beginResults + matchResults
+        return beginResults
     
     def alphabet_list(self, alpha):
         # Only interested in plates beginning with a word
