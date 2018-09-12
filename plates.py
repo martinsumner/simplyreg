@@ -33,6 +33,8 @@ class Plates():
         for plateT in self.plates:
             if wholeRe.match(plateT[0]):
                 wholeResults.append(plateT)
+        wholeResults.sort(lambda x,y: cmp(x[1], y[1]))
+        wholeResults.sort(lambda x,y: cmp(len(x[0]), len(y[0])))
         return wholeResults
     
     def alphabet_list(self, alpha):
@@ -45,6 +47,8 @@ class Plates():
                 wholeResults.append(plateT)
             elif beginRe.match(plateT[0]):
                 beginResults.append(plateT)
+        wholeResults.sort(lambda x,y: cmp(x[1], y[1]))
+        beginResults.sort(lambda x,y: cmp(x[1], y[1]))
         wholeResults.sort(lambda x,y: cmp(len(x[0]), len(y[0])))
         beginResults.sort(lambda x,y: cmp(len(x[0]), len(y[0])))
         return wholeResults + beginResults
