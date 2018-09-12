@@ -1,0 +1,16 @@
+<html>
+   <body>
+      <div class="basic">
+          {% include "search_box.html" %}    
+    </div>
+      <h2>{{ result_count }} results starting with letter {{ alphabet_term }}</h2>
+     <ul>
+       {% for item in results %}
+         <li>{{ escape(item[1]) }} - price {{ escape(item[2]) }}</li>
+       {% end %}
+     </ul>
+     <div class="basic">
+        {% include "alphabet.html" %}    
+    </div>
+   </body>
+ </html>
