@@ -6,7 +6,7 @@ import sys
 import re
 
 LIST_PARAM = re.compile(r"^[A-Z]+$")
-SEARCH_PARAM = re.compile(r"^[A-Za-z0-9]+$")
+SEARCH_PARAM = re.compile(r"^[A-Za-z0-9 ]+$")
 
 class MainHandler(tornado.web.RequestHandler):
 
