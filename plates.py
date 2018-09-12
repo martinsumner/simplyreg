@@ -14,8 +14,7 @@ class Plates():
             with open (CSV_FLDR + "/" + dealer + ".csv", 'rb') as csvFile:
                 reader = csv.reader(csvFile)
                 for [plate, price] in reader:
-                    searchPlate = plate.replace(" ", "") 
-                    plateT = (searchPlate, plate, price, dealer, vat_status)
+                    plateT = (plate, price, dealer, vat_status)
                     self.plates.append(plateT)
     
     def match_plate(self, matchString):
@@ -29,20 +28,25 @@ class Plates():
         else:
             refinedMatch = matchString
 
-        beginRe = re.compile(r".*\b" + refinedMatch)
-        beginResults = []
+        wholeRe = re.compile(r".*\b" + refinedMatch + "\\b")
+        wholeResults = []
         for plateT in self.plates:
-            if beginRe.match(plateT[1]):
-                beginResults.append(plateT)
-        return beginResults
+            if wholeRe.match(plateT[0]):
+                wholeResults.append(plateT)
+        return wholeResults
     
     def alphabet_list(self, alpha):
         # Only interested in plates beginning with a word
         beginRe = re.compile(r".*\b" + alpha)
-        beginResults = []
+        wholeRe = re.compile(r".*\b" + alpha + "\\b")
+        beginResults, wholeResults = [], []
         for plateT in self.plates:
-            if beginRe.match(plateT[1]):
+            if wholeRe.match(plateT[0]):
+                wholeResults.append(plateT)
+            elif beginRe.match(plateT[0]):
                 beginResults.append(plateT)
-        return beginResults
+        wholeResults.sort(lambda x,y: cmp(len(x[0]), len(y[0])))
+        beginResults.sort(lambda x,y: cmp(len(x[0]), len(y[0])))
+        return wholeResults + beginResults
 
 

@@ -6,7 +6,7 @@
       <h2>{{ result_count }} results starting with letter {{ alphabet_term }}</h2>
      <ul>
        {% for item in results %}
-         <li>{{ escape(item[1]) }} - price {{ escape(item[2]) }}</li>
+         <li>{{ escape(item[0]) }} - price {{ escape(item[1]) }}</li>
        {% end %}
      </ul>
      <div class="basic">
