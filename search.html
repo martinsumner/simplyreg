@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+  <meta charset="utf-8">
+  <title>Simply Registrations</title>
+  <meta name="description" content="">
+  <meta name="author" content="James Saperia">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- Bootstrap
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+      strong {
+          color: #666699
+      }     
+      </style>
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <nav class="navbar navbar-expand-sm navbar-light">
+      <a class="navbar-brand" href="index.html"><img classs="img-responsive" src="images/JS-Logo.png"></a>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="about.html">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="blog.html">Blog</a>
+          </li>
+          
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container bg-light pt-1 pb-3">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 align="center">Search For Plate</h3>
+                <form class="form-inline my-2 my-lg-0" action="/search">
+                    <input class="form-control mr-sm-2" name="search" id="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <h3 align="center">Browse by Initial</h3>
+                    <div align="center">
+                    <a href="/list?begins=A">A</a>
+                    <a href="/list?begins=B">B</a>
+                    <a href="/list?begins=C">C</a>
+                    <a href="/list?begins=D">D</a>
+                    <a href="/list?begins=E">E</a>
+                    <a href="/list?begins=F">F</a>
+                    <a href="/list?begins=G">G</a>
+                    <a href="/list?begins=H">H</a>
+                    <a href="/list?begins=I">I</a>
+                    <a href="/list?begins=J">J</a>
+                    <a href="/list?begins=K">K</a>
+                    <a href="/list?begins=L">L</a>
+                    <a href="/list?begins=M">M</a>
+                    <a href="/list?begins=N">N</a>
+                    <a href="/list?begins=O">O</a>
+                    <a href="/list?begins=P">P</a>
+                    <a href="/list?begins=Q">Q</a>
+                    <a href="/list?begins=R">R</a>
+                    <a href="/list?begins=S">S</a>
+                    <a href="/list?begins=T">T</a>
+                    <a href="/list?begins=U">U</a>
+                    <a href="/list?begins=V">V</a>
+                    <a href="/list?begins=W">W</a>
+                    <a href="/list?begins=X">X</a>
+                    <a href="/list?begins=Y">Y</a>
+                    <a href="/list?begins=Z">Z</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+  
+    <div class="container mt-3 pt-3 mb-5 pb-5">
+            {% if search_term %}
+                {% if result_count == 0 %}
+                    <p>No results found for {{ escape(search_type) }} {{ escape(search_term) }} - try another query or browse alphabetically</p>
+                {% elif result_count == 1 %}
+                    <p>1 result found for {{ escape(search_type) }} {{ escape(search_term) }}</p>
+                {% else %}
+                    <p>{{ result_count }} results found for {{ escape(search_type) }} {{ escape(search_term) }}</p>
+                {% end %}
+            <div class="row">
+            <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Plate</th>
+                        <th scope="col">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in results %}
+                      <tr>
+                        <th scope="row">{{ escape(item[0]) }}</td>
+                        <td>{{ escape(item[1]) }}</td>
+                      </tr>
+                    {% end %}
+                    </tbody>
+                  </table>
+            </div>
+            {% end %}
+    </div>
+
+
+
+
+    <footer class="footer">
+        <div class="container bg-dark text-white">
+            <span class='copyright'><p><small>© 2018 | Simply Registrations Ltd. 52 Goldsmith Drive, Robin Hood, Wakefield WF3 3TF - Registered in England and Wales No. 5368542. Read our Terms & Conditions. Simply Registrations is in no way affiliated to the DVLA or DVLA Personalised Registrations. DVLA is a registered trade mark of the Driver and Vehicle Licensing Agency.</small></p></span>
+            <p align="center">
+                <a href="https://twitter.com/JamesSaperia" class="fa fa-twitter fa-2x"></a>
+                <a href="https://www.facebook.com/simplyregistrations" class="fa fa-facebook fa-2x"></a>
+            </p>
+            
+        </div>
+    </footer>
+            
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>

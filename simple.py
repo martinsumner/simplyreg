@@ -10,12 +10,18 @@ SEARCH_PARAM = re.compile(r"^[A-Za-z0-9 ]+$")
 
 class MainHandler(tornado.web.RequestHandler):
 
-    def get_template_path(self):
-        dirname = os.path.dirname(__file__)
-        return os.path.join(dirname, "templates")
-
     def get(self):
         self.render("index.html")
+
+class WPHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        self.render("wordpress.html")
+
+class TestHandler(tornado.web.RequestHandler):
+
+    def get(self):
+        self.render("index_test.html")
 
 class RegistrationHandler(MainHandler):
 
@@ -35,14 +41,19 @@ class SearchHandler(RegistrationHandler):
 
     def get(self):
         searchStr = self.get_argument("search")
-        if self.validate_regex(SEARCH_PARAM, searchStr):
-            results = self.dealer_plates.match_plate(searchStr.upper())
-            self.render("search_results.html", 
-                        result_count=len(results), 
-                        search_term=searchStr.upper(), 
-                        results=results)
+        if searchStr:
+            if self.validate_regex(SEARCH_PARAM, searchStr):
+                results = self.dealer_plates.match_plate(searchStr.upper())
+                self.render("search.html", 
+                            result_count=len(results), 
+                            search_term=searchStr.upper(), 
+                            results=results,
+                            search_type="search")
+            else:
+                self.invalid_input()
         else:
-            self.invalid_input()
+            self.render("search.html", search_term=None)
+        
 
 class ListHandler(RegistrationHandler):
 
@@ -50,10 +61,11 @@ class ListHandler(RegistrationHandler):
         beginsStr = self.get_argument("begins")
         if self.validate_regex(LIST_PARAM, beginsStr):
             results = self.dealer_plates.alphabet_list(beginsStr.upper())
-            self.render("list_results.html", 
+            self.render("search.html", 
                         result_count=len(results), 
-                        alphabet_term=beginsStr.upper(), 
-                        results=results)
+                        search_term=beginsStr.upper(), 
+                        results=results,
+                        search_type="list by")
         else:
             self.invalid_input()
         
@@ -63,9 +75,14 @@ def make_app():
     dealers = [("dealer1", True), ("dealer2", False)]
     dealer_plates = plates.Plates(dealers)
     return tornado.web.Application([
-        (r"/", MainHandler),
+        (r"/index.html", MainHandler),
+        (r"/wordpress.html", WPHandler),
+        (r"/index_test.html", TestHandler),
+        (r"/index.html", MainHandler),
         (r"/search", SearchHandler, dict(dealer_plates = dealer_plates)),
         (r"/list", ListHandler, dict(dealer_plates = dealer_plates)),
+        (r"/css/(.*)", tornado.web.StaticFileHandler, {"path" : "css/"}),
+        (r"/images/(.*)", tornado.web.StaticFileHandler, {"path" : "images/"}),
     ])
 
 if __name__ == "__main__":
