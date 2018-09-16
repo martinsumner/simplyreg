@@ -75,10 +75,9 @@ def make_app():
     dealers = [("dealer1", True), ("dealer2", False)]
     dealer_plates = plates.Plates(dealers)
     return tornado.web.Application([
+        (r"/", MainHandler),
         (r"/index.html", MainHandler),
         (r"/wordpress.html", WPHandler),
-        (r"/index_test.html", TestHandler),
-        (r"/index.html", MainHandler),
         (r"/search", SearchHandler, dict(dealer_plates = dealer_plates)),
         (r"/list", ListHandler, dict(dealer_plates = dealer_plates)),
         (r"/css/(.*)", tornado.web.StaticFileHandler, {"path" : "css/"}),
