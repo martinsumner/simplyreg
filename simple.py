@@ -40,34 +40,42 @@ class RegistrationHandler(MainHandler):
 class SearchHandler(RegistrationHandler):
 
     def get(self):
-        searchStr = self.get_argument("search")
-        if searchStr:
-            if self.validate_regex(SEARCH_PARAM, searchStr):
-                results = self.dealer_plates.match_plate(searchStr.upper())
-                self.render("search.html", 
-                            result_count=len(results), 
-                            search_term=searchStr.upper(), 
-                            results=results,
-                            search_type="search")
+        try:
+            searchStr = self.get_argument("search")
+            if searchStr:
+                if self.validate_regex(SEARCH_PARAM, searchStr):
+                    results = self.dealer_plates.match_plate(searchStr.upper())
+                    self.render("search.html", 
+                                result_count=len(results), 
+                                search_term=searchStr.upper(), 
+                                results=results,
+                                search_type="search")
+                else:
+                    self.invalid_input()
             else:
-                self.invalid_input()
-        else:
+                raise tornado.web.MissingArgumentError("search")  
+        except tornado.web.MissingArgumentError:
             self.render("search.html", search_term=None)
-        
 
 class ListHandler(RegistrationHandler):
 
     def get(self):
-        beginsStr = self.get_argument("begins")
-        if self.validate_regex(LIST_PARAM, beginsStr):
-            results = self.dealer_plates.alphabet_list(beginsStr.upper())
-            self.render("search.html", 
-                        result_count=len(results), 
-                        search_term=beginsStr.upper(), 
-                        results=results,
-                        search_type="list by")
-        else:
-            self.invalid_input()
+        try:
+            beginsStr = self.get_argument("begins")
+            if beginsStr:
+                if self.validate_regex(LIST_PARAM, beginsStr):
+                    results = self.dealer_plates.alphabet_list(beginsStr.upper())
+                    self.render("search.html", 
+                                result_count=len(results), 
+                                search_term=beginsStr.upper(), 
+                                results=results,
+                                search_type="list by")
+                else:
+                    self.invalid_input()
+            else:
+                raise tornado.web.MissingArgumentError("begins")
+        except tornado.web.MissingArgumentError:
+            self.render("search.html", search_term=None)    
         
 
 
