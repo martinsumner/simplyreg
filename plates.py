@@ -39,18 +39,19 @@ class Plates():
     
     def alphabet_list(self, alpha):
         # Only interested in plates beginning with a word
-        beginRe = re.compile(r".*\b" + alpha)
-        wholeRe = re.compile(r".*\b" + alpha + "\\b")
-        beginResults, wholeResults = [], []
+        bRe = re.compile(r".*\b" + alpha + "([A-Z0-9]*)")
+        beginResults = []
         for plateT in self.plates:
-            if wholeRe.match(plateT[0]):
-                wholeResults.append(plateT)
-            elif beginRe.match(plateT[0]):
-                beginResults.append(plateT)
-        wholeResults.sort(lambda x,y: cmp(x[1], y[1]))
-        beginResults.sort(lambda x,y: cmp(x[1], y[1]))
-        wholeResults.sort(lambda x,y: cmp(len(x[0]), len(y[0])))
-        beginResults.sort(lambda x,y: cmp(len(x[0]), len(y[0])))
-        return wholeResults + beginResults
-
-
+            bReM = bRe.match(plateT[0])
+            if bReM:
+                beginResults.append((plateT, bReM))
+        # This sorts by the part after the searched for letter in the matching 
+        # plate
+        # so if the plate is "A35 II" - this sorts on the "35", if it is 
+        # "45 AB" it is "B", if it is "A 1" it is ""
+        # the sort order says that numbers are not as important as letters 
+        # (so A11 will be after AA), then it is in alphabetic order, but if 
+        # there is a tie - prefer it for the letter to be in the left part not 
+        # the right part of the plate
+        sortedResults = sorted(beginResults, key = lambda p: (p[1].groups()[0].isdigit(), p[1].groups()[0], p[1].start(1)))
+        return [i[0] for i in sortedResults]
