@@ -76,7 +76,6 @@ class ListHandler(RegistrationHandler):
                 raise tornado.web.MissingArgumentError("begins")
         except tornado.web.MissingArgumentError:
             self.render("search.html", search_term=None)    
-        
 
 
 def make_app():
