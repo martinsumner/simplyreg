@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <results>
-        <summary>
+        <summary><![CDATA[
             {% if search_term %}
 
                 {% if result_count == 0 %}
@@ -10,12 +10,12 @@
                 {% else %}
                     {{ result_count }} results found for {{ escape(search_type) }} {{ escape(search_term) }}
                 {% end %}
-        </summary>
+        ]]></summary>
         
         <plates>
                 {% for item in results %}
-                    <plate>{{ escape(item[0]) }}</plate>
-                    <price>{{ escape(item[1]) }}</price>
+                    <plate><![CDATA[{{ escape(item[0]) }}]]></plate>
+                    <price><![CDATA[{{ escape(item[1]) }}]]></price>
                 {% end %}
         </plates>
             {% end %}
