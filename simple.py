@@ -13,15 +13,10 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("index.html")
 
-class WPHandler(tornado.web.RequestHandler):
-
+class RobotsHandler(tornado.web.RequestHandler):
+    
     def get(self):
-        self.render("wordpress.html")
-
-class TestHandler(tornado.web.RequestHandler):
-
-    def get(self):
-        self.render("index_test.html")
+        self.render("robots.txt")
 
 class RegistrationHandler(MainHandler):
 
@@ -77,18 +72,14 @@ class ListHandler(RegistrationHandler):
         except tornado.web.MissingArgumentError:
             self.render("search.html", search_term=None)    
 
-
 def make_app():
     dealers = [("dealer1", True), ("dealer2", False)]
     dealer_plates = plates.Plates(dealers)
     return tornado.web.Application([
         (r"/", MainHandler),
-        (r"/index.html", MainHandler),
-        (r"/wordpress.html", WPHandler),
+        (r"/robots.txt", RobotsHandler),
         (r"/search", SearchHandler, dict(dealer_plates = dealer_plates)),
         (r"/list", ListHandler, dict(dealer_plates = dealer_plates)),
-        (r"/css/(.*)", tornado.web.StaticFileHandler, {"path" : "css/"}),
-        (r"/images/(.*)", tornado.web.StaticFileHandler, {"path" : "images/"}),
     ])
 
 if __name__ == "__main__":
