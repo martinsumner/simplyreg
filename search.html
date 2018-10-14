@@ -13,9 +13,12 @@
         ]]></summary>
         
         <plates>
+            
                 {% for item in results %}
+                <product>
                     <plate><![CDATA[{{ escape(item[0]) }}]]></plate>
                     <price><![CDATA[{{ escape(item[1]) }}]]></price>
+                </product>
                 {% end %}
         </plates>
             {% end %}
