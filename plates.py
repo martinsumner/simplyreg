@@ -46,23 +46,23 @@ class Plates():
                         else:
                             vatPrice = float(price.replace(',', ''))
                         platePrice = int(vatPrice + float(markup))
-                        plateT = (platePrice, dealer)
+                        plateT = (platePrice, dealer, dealerFile)
                         if plate in duplicateCheck:
                             logTxt = ("Ignoring duplicate plate ", " from dealer ", " duplicate found in ")
-                            (dupPlatePrice, dupDealer) = duplicateCheck[plate]
+                            (dupPlatePrice, dupDealer, dupDealerFile) = duplicateCheck[plate]
                             if platePrice > dupPlatePrice:
                                 duplicateCheck[plate] = plateT
-                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dupDealer) + logTxt[2] + repr(dealer))
+                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dupDealerFile) + logTxt[2] + repr(dealerFile))
                             else:
-                                duplicateCheck[plate] = (dupPlatePrice, dupDealer)
-                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dealer) + logTxt[2] + repr(dupDealer))
+                                duplicateCheck[plate] = (dupPlatePrice, dupDealer, dupDealerFile)
+                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dealerFile) + logTxt[2] + repr(dupDealerFile))
                         else:
                             duplicateCheck[plate] = plateT
                     else:
                         logTxt = ("Cannot read line ", " of incorrect length for dealerFile ")
                         print(logTxt[0] + repr(line) + logTxt[1] + repr(dealerFile))
         for plate in duplicateCheck:
-            (platePrice, dealer) = duplicateCheck[plate]
+            (platePrice, dealer, dealerFile) = duplicateCheck[plate]
             self.plates.append((plate, repr(platePrice), dealer))
 
 
