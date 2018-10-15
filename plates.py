@@ -6,7 +6,6 @@ from os.path import isfile, join
 
 FILE_RE = re.compile(r"([A-Za-z0-9]+)_(NOVAT|PLUSVAT)_([0-9]+)\.(csv|CSV)")
 ALPHA_RE = re.compile(r"[A-Z]+")
-VAT_RATE = 1.2
 
 class Plates():
 
@@ -41,20 +40,16 @@ class Plates():
                 for line in reader:
                     if len(line) == 2:
                         [plate, price] = line
-                        if addVat == True:
-                            vatPrice = float(price.replace(',', '')) * VAT_RATE
-                        else:
-                            vatPrice = float(price.replace(',', ''))
-                        platePrice = int(vatPrice + float(markup))
-                        plateT = (platePrice, dealer, dealerFile)
+                        platePrice = int(float(price.replace(',', '')) + float(markup))
+                        plateT = (platePrice, addVat, dealer, dealerFile)
                         if plate in duplicateCheck:
                             logTxt = ("Ignoring duplicate plate ", " from dealer ", " duplicate found in ")
-                            (dupPlatePrice, dupDealer, dupDealerFile) = duplicateCheck[plate]
+                            (dupPlatePrice, dupAddVat, dupDealer, dupDealerFile) = duplicateCheck[plate]
                             if platePrice > dupPlatePrice:
                                 duplicateCheck[plate] = plateT
                                 print(logTxt[0] + repr(plate) + logTxt[1] + repr(dupDealerFile) + logTxt[2] + repr(dealerFile))
                             else:
-                                duplicateCheck[plate] = (dupPlatePrice, dupDealer, dupDealerFile)
+                                duplicateCheck[plate] = (dupPlatePrice, dupAddVat, dupDealer, dupDealerFile)
                                 print(logTxt[0] + repr(plate) + logTxt[1] + repr(dealerFile) + logTxt[2] + repr(dupDealerFile))
                         else:
                             duplicateCheck[plate] = plateT
@@ -62,8 +57,8 @@ class Plates():
                         logTxt = ("Cannot read line ", " of incorrect length for dealerFile ")
                         print(logTxt[0] + repr(line) + logTxt[1] + repr(dealerFile))
         for plate in duplicateCheck:
-            (platePrice, dealer, dealerFile) = duplicateCheck[plate]
-            self.plates.append((plate, repr(platePrice), dealer))
+            (platePrice, addVat, dealer, dealerFile) = duplicateCheck[plate]
+            self.plates.append((plate, repr(platePrice), repr(addVat), dealer))
 
 
     def match_plate(self, matchString):

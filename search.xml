@@ -18,6 +18,7 @@
                 <product>
                     <plate><![CDATA[{{ escape(item[0]) }}]]></plate>
                     <price><![CDATA[{{ escape(item[1]) }}]]></price>
+                    <price><![CDATA[{{ escape(item[2]) }}]]></price>
                 </product>
                 {% end %}
         </plates>
