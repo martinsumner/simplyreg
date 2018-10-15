@@ -1,1 +1,1 @@
-web: python2.7 test.py $PORT
+web: python2.7 simple.py $PORT
