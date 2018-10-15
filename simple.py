@@ -40,7 +40,7 @@ class SearchHandler(RegistrationHandler):
             if searchStr:
                 if self.validate_regex(SEARCH_PARAM, searchStr):
                     results = self.dealer_plates.match_plate(searchStr.upper())
-                    self.render("search.html", 
+                    self.render("search.xml", 
                                 result_count=len(results), 
                                 search_term=searchStr.upper(), 
                                 results=results,
@@ -50,7 +50,7 @@ class SearchHandler(RegistrationHandler):
             else:
                 raise tornado.web.MissingArgumentError("search")  
         except tornado.web.MissingArgumentError:
-            self.render("search.html", search_term=None)
+            self.render("search.xml", search_term=None)
 
 class ListHandler(RegistrationHandler):
 
@@ -60,7 +60,7 @@ class ListHandler(RegistrationHandler):
             if beginsStr:
                 if self.validate_regex(LIST_PARAM, beginsStr):
                     results = self.dealer_plates.alphabet_list(beginsStr.upper())
-                    self.render("search.html", 
+                    self.render("search.xml", 
                                 result_count=len(results), 
                                 search_term=beginsStr.upper(), 
                                 results=results,
@@ -70,11 +70,11 @@ class ListHandler(RegistrationHandler):
             else:
                 raise tornado.web.MissingArgumentError("begins")
         except tornado.web.MissingArgumentError:
-            self.render("search.html", search_term=None)    
+            self.render("search.xml", search_term=None)    
 
 def make_app():
-    dealers = [("dealer1", True), ("dealer2", False)]
-    dealer_plates = plates.Plates(dealers)
+    dealerFolder = "csv"
+    dealer_plates = plates.Plates(dealerFolder)
     return tornado.web.Application([
         (r"/", MainHandler),
         (r"/robots.txt", RobotsHandler),
