@@ -45,17 +45,25 @@ class Plates():
                             vatPrice = float(price.replace(',', '')) * VAT_RATE
                         else:
                             vatPrice = float(price.replace(',', ''))
-                        plateT = (plate, repr(int(vatPrice + float(markup))), dealer)
+                        platePrice = int(vatPrice + float(markup))
+                        plateT = (platePrice, dealer)
                         if plate in duplicateCheck:
-                            dupDealer = duplicateCheck[plate]
-                            logTxt = ("Ignoring duplicate plate ", " in dealer file ", " duplicating ")
-                            print(logTxt[0] + repr(plate) + logTxt[1] + repr(dealerFile) + logTxt[2] + repr(dupDealer))
+                            logTxt = ("Ignoring duplicate plate ", " from dealer ", " duplicate found in ")
+                            (dupPlatePrice, dupDealer) = duplicateCheck[plate]
+                            if platePrice > dupPlatePrice:
+                                duplicateCheck[plate] = plateT
+                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dupDealer) + logTxt[2] + repr(dealer))
+                            else:
+                                duplicateCheck[plate] = (dupPlatePrice, dupDealer)
+                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dealer) + logTxt[2] + repr(dupDealer))
                         else:
-                            duplicateCheck[plate] = dealerFile
-                            self.plates.append(plateT)
+                            duplicateCheck[plate] = plateT
                     else:
                         logTxt = ("Cannot read line ", " of incorrect length for dealerFile ")
                         print(logTxt[0] + repr(line) + logTxt[1] + repr(dealerFile))
+        for plate in duplicateCheck:
+            (platePrice, dealer) = duplicateCheck[plate]
+            self.plates.append((plate, repr(platePrice), dealer))
 
 
     def match_plate(self, matchString):
