@@ -11,12 +11,7 @@ SEARCH_PARAM = re.compile(r"^[A-Za-z0-9 ]+$")
 class MainHandler(tornado.web.RequestHandler):
 
     def get(self):
-        self.render("index.html")
-
-class RobotsHandler(tornado.web.RequestHandler):
-    
-    def get(self):
-        self.render("robots.txt")
+        self.render("search.html")
 
 class RegistrationHandler(MainHandler):
 
@@ -40,7 +35,7 @@ class SearchHandler(RegistrationHandler):
             if searchStr:
                 if self.validate_regex(SEARCH_PARAM, searchStr):
                     results = self.dealer_plates.match_plate(searchStr.upper())
-                    self.render("search.xml", 
+                    self.render("search.html", 
                                 result_count=len(results), 
                                 search_term=searchStr.upper(), 
                                 results=results,
@@ -50,7 +45,7 @@ class SearchHandler(RegistrationHandler):
             else:
                 raise tornado.web.MissingArgumentError("search")  
         except tornado.web.MissingArgumentError:
-            self.render("search.xml", search_term=None)
+            self.render("search.html", search_term=None)
 
 class ListHandler(RegistrationHandler):
 
@@ -60,7 +55,7 @@ class ListHandler(RegistrationHandler):
             if beginsStr:
                 if self.validate_regex(LIST_PARAM, beginsStr):
                     results = self.dealer_plates.alphabet_list(beginsStr.upper())
-                    self.render("search.xml", 
+                    self.render("search.html", 
                                 result_count=len(results), 
                                 search_term=beginsStr.upper(), 
                                 results=results,
@@ -70,16 +65,19 @@ class ListHandler(RegistrationHandler):
             else:
                 raise tornado.web.MissingArgumentError("begins")
         except tornado.web.MissingArgumentError:
-            self.render("search.xml", search_term=None)    
+            self.render("search.html", search_term=None)    
+
 
 def make_app():
     dealerFolder = "csv"
     dealer_plates = plates.Plates(dealerFolder)
     return tornado.web.Application([
         (r"/", MainHandler),
-        (r"/robots.txt", RobotsHandler),
+        (r"/index.html", MainHandler),
         (r"/search", SearchHandler, dict(dealer_plates = dealer_plates)),
         (r"/list", ListHandler, dict(dealer_plates = dealer_plates)),
+        (r"/css/(.*)", tornado.web.StaticFileHandler, {"path" : "css/"}),
+        (r"/images/(.*)", tornado.web.StaticFileHandler, {"path" : "images/"}),
     ])
 
 if __name__ == "__main__":

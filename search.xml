@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <results>
+        <summary><![CDATA[
+            {% if search_term %}
+
+                {% if result_count == 0 %}
+                    No results found for {{ escape(search_type) }} {{ escape(search_term) }} - try another query or browse alphabetically
+                {% elif result_count == 1 %}
+                    1 result found for {{ escape(search_type) }} {{ escape(search_term) }}
+                {% else %}
+                    {{ result_count }} results found for {{ escape(search_type) }} {{ escape(search_term) }}
+                {% end %}
+        ]]></summary>
+        
+        <plates>
+            
+                {% for item in results %}
+                <product>
+                    <plate><![CDATA[{{ escape(item[0]) }}]]></plate>
+                    <price><![CDATA[{{ escape(item[1]) }}]]></price>
+                    <price><![CDATA[{{ escape(item[2]) }}]]></price>
+                </product>
+                {% end %}
+        </plates>
+            {% end %}
+    </results>
+
