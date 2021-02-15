@@ -1,22 +1,66 @@
 import csv
 import random
 import re
+from os import listdir
+from os.path import isfile, join
 
-CSV_FLDR = 'csv'
+FILE_RE = re.compile(r"([A-Za-z0-9]+)_(NOVAT|PLUSVAT)_([0-9]+)\.(csv|CSV)")
 ALPHA_RE = re.compile(r"[A-Z]+")
 
 class Plates():
 
-    def __init__(self, dealers):
-        self.dealers = dealers
+    def __init__(self, dealerFolder):
+        folderListing = listdir(dealerFolder)
+        onlyfiles = [f for f in folderListing if isfile(join(dealerFolder, f))]
+        dealerList = []
+        for dealerFile in onlyfiles:
+            dealerMatch = FILE_RE.match(dealerFile)
+            if dealerMatch and len(dealerMatch.groups()) == 4:
+                if dealerMatch.groups()[1] == 'PLUSVAT':
+                    addVat = True
+                else:
+                    addVat = False
+                
+                dealer = dealerMatch.groups()[0]
+                markup = dealerMatch.groups()[2]
+                dealerList.append((dealerFile, dealer, addVat, markup))
+            else:
+                print("Unable to load dealerFile" + repr(dealerFile))
+
         self.plates = []
-        for (dealer, vat_status) in dealers:
-            with open (CSV_FLDR + "/" + dealer + ".csv", 'rb') as csvFile:
-                reader = csv.reader(csvFile)
-                for [plate, price] in reader:
-                    plateT = (plate, price, dealer, vat_status)
-                    self.plates.append(plateT)
+        self.load_plates(dealerList, dealerFolder)
+        print(repr(len(self.plates)) + " plates loaded from " + repr(len(onlyfiles)) + " dealer files")
+        
     
+    def load_plates(self, dealerList, dealerFolder):
+        duplicateCheck = dict()
+        for (dealerFile, dealer, addVat, markup) in dealerList:
+            with open (join(dealerFolder, dealerFile), 'rb') as csvFile:
+                reader = csv.reader(csvFile)
+                for line in reader:
+                    if len(line) == 2:
+                        [plate, price] = line
+                        platePrice = int(float(price.replace(',', '')) + float(markup))
+                        plateT = (platePrice, addVat, dealer, dealerFile)
+                        if plate in duplicateCheck:
+                            logTxt = ("Ignoring duplicate plate ", " from dealer ", " duplicate found in ")
+                            (dupPlatePrice, dupAddVat, dupDealer, dupDealerFile) = duplicateCheck[plate]
+                            if platePrice > dupPlatePrice:
+                                duplicateCheck[plate] = plateT
+                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dupDealerFile) + logTxt[2] + repr(dealerFile))
+                            else:
+                                duplicateCheck[plate] = (dupPlatePrice, dupAddVat, dupDealer, dupDealerFile)
+                                print(logTxt[0] + repr(plate) + logTxt[1] + repr(dealerFile) + logTxt[2] + repr(dupDealerFile))
+                        else:
+                            duplicateCheck[plate] = plateT
+                    else:
+                        logTxt = ("Cannot read line ", " of incorrect length for dealerFile ")
+                        print(logTxt[0] + repr(line) + logTxt[1] + repr(dealerFile))
+        for plate in duplicateCheck:
+            (platePrice, addVat, dealer, dealerFile) = duplicateCheck[plate]
+            self.plates.append((plate, repr(platePrice), repr(addVat), dealer))
+
+
     def match_plate(self, matchString):
         # First try and find up to three letters in the search string
         # Want to match on letters only, if letters are provided, ignoring
